@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#101116">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#101116"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Animation Studio"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./icon.svg">
 <title>Animation Studio</title>
 <style>
 :root{--bg:#101116;--panel:#191b23;--panel2:#222530;--line:#303340;--text:#f7f7fb;--muted:#9b9eae;--mint:#8cf0d2;--pink:#ff8fbd;--purple:#b8a0ff}
@@ -29,7 +29,7 @@ function snapshot(){return JSON.parse(JSON.stringify(frames[current]));}
 function saveHistory(){history.push(snapshot());if(history.length>40)history.shift();}
 function scheduleSave(){ $('saveStatus').textContent='● Сохранение…'; clearTimeout(scheduleSave.t);scheduleSave.t=setTimeout(()=>{try{localStorage.setItem('animationcunt-project',JSON.stringify({name:$('projectName').value,frames,current}));$('saveStatus').textContent='● Сохранено';}catch(e){$('saveStatus').textContent='● Только в этой сессии';}},400);}
 function drawStroke(c,s,alpha){c.save();c.globalAlpha=alpha??1;c.lineCap='round';c.lineJoin='round';c.strokeStyle=s.color||color;c.fillStyle=s.color||color;c.lineWidth=s.size||size;
-if(s.kind==='path'){if(!s.points.length){c.restore();return;}c.beginPath();c.moveTo(s.points[0][0],s.points[0][1]);for(let i=1;i<s.points.length;i++)c.lineTo(s.points[i][0],s.points[i][1]);if(s.points.length===1){c.lineTo(s.points[0][0]+.1,s.points[0][1]+.1);}c.stroke();}
+if(s.kind==='erase')c.globalCompositeOperation='destination-out';if(s.kind==='path'||s.kind==='erase'){if(!s.points.length){c.restore();return;}c.beginPath();c.moveTo(s.points[0][0],s.points[0][1]);for(let i=1;i<s.points.length;i++)c.lineTo(s.points[i][0],s.points[i][1]);if(s.points.length===1){c.lineTo(s.points[0][0]+.1,s.points[0][1]+.1);}c.stroke();}
 else if(s.kind==='line'){c.beginPath();c.moveTo(s.x1,s.y1);c.lineTo(s.x2,s.y2);c.stroke();}
 else if(s.kind==='rect'){c.strokeRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);}
 else if(s.kind==='circle'){c.beginPath();c.ellipse((s.x1+s.x2)/2,(s.y1+s.y2)/2,Math.abs(s.x2-s.x1)/2,Math.abs(s.y2-s.y1)/2,0,0,Math.PI*2);c.stroke();}
@@ -41,7 +41,7 @@ function render(){renderFrame(canvas,current);$('frameLabel').textContent='Ка�
 function renderThumbs(){const root=$('frames');root.innerHTML='';frames.forEach((f,i)=>{const b=document.createElement('button');b.className='frame'+(i===current?' active':'');b.innerHTML='<canvas width="320" height="180"></canvas><small>Кадр '+(i+1)+'</small>';const c=b.querySelector('canvas');const cc=c.getContext('2d');if(f.bg!=='transparent'){cc.fillStyle=f.bg;cc.fillRect(0,0,c.width,c.height);}f.strokes.forEach(s=>{const k=JSON.parse(JSON.stringify(s));const scale=c.width/960;if(k.points)k.points=k.points.map(p=>[p[0]*scale,p[1]*scale]);['x','x1','x2'].forEach(key=>{if(k[key]!=null)k[key]*=scale});['y','y1','y2'].forEach(key=>{if(k[key]!=null)k[key]*=scale});k.size=(k.size||size)*scale;drawStroke(cc,k);});b.addEventListener('click',()=>{current=i;history=[];render();});root.appendChild(b);});}
 function point(e){const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height];}
 let activeStroke=null,startPoint=null;
-canvas.addEventListener('pointerdown',e=>{if(playing)return;e.preventDefault();canvas.setPointerCapture(e.pointerId);const p=point(e);startPoint=p;saveHistory();if(tool==='text'){const text=prompt('Какой текст добавить?','Привет!');if(text){frames[current].strokes.push({kind:'text',text,x:p[0],y:p[1],color,size});render();scheduleSave();}return;}if(tool==='sticker')return;activeStroke={kind:tool==='pen'||tool==='eraser'?'path':tool,points:[p],x1:p[0],y1:p[1],x2:p[0],y2:p[1],color:tool==='eraser'?frames[current].bg==='transparent'?'#ffffff':frames[current].bg:color,size:tool==='eraser'?size*3:size};frames[current].strokes.push(activeStroke);renderFrame(canvas,current);});
+canvas.addEventListener('pointerdown',e=>{if(playing)return;e.preventDefault();canvas.setPointerCapture(e.pointerId);const p=point(e);startPoint=p;saveHistory();if(tool==='text'){const text=prompt('Какой текст добавить?','Привет!');if(text){frames[current].strokes.push({kind:'text',text,x:p[0],y:p[1],color,size});render();scheduleSave();}return;}if(tool==='sticker')return;activeStroke={kind:tool==='eraser'?'erase':tool==='pen'?'path':tool,points:[p],x1:p[0],y1:p[1],x2:p[0],y2:p[1],color,size:tool==='eraser'?size*3:size};frames[current].strokes.push(activeStroke);renderFrame(canvas,current);});
 canvas.addEventListener('pointermove',e=>{if(!activeStroke)return;e.preventDefault();const p=point(e);if(activeStroke.kind==='path')activeStroke.points.push(p);else{activeStroke.x2=p[0];activeStroke.y2=p[1];}renderFrame(canvas,current);});
 function endDraw(){if(activeStroke){activeStroke=null;render();scheduleSave();}}
 canvas.addEventListener('pointerup',endDraw);canvas.addEventListener('pointercancel',endDraw);
@@ -69,5 +69,6 @@ $('modalOk').addEventListener('click',()=>$('modal').classList.add('hidden'));
 $('helpBtn').addEventListener('click',()=>showModal('Твой первый мультфильм','1. Нарисуй что-нибудь на белом холсте. 2. Нажми «＋ Кадр». 3. Немного измени рисунок. 4. Повтори несколько раз и нажми ▶. «Экспорт видео» соберёт кадры в короткий ролик.'));
 try{const old=localStorage.getItem('animationcunt-project');if(old){const d=JSON.parse(old);if(Array.isArray(d.frames)&&d.frames.length){frames=d.frames;current=Math.min(d.current||0,frames.length-1);$('projectName').value=d.name||$('projectName').value;}}}catch(e){}
 render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 })();
 </script></body></html>
