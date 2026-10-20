@@ -6,6 +6,7 @@ Animation Studio is a touch-friendly 2D animation editor for beginners. The curr
 - Responsive 16:9 canvas with touch drawing
 - Brush, transparent eraser, line, rectangle, ellipse, and text tools
 - Palette, canvas backgrounds, and previous-frame onion skin
+- Multiple named drawing layers with visibility toggles
 - Frame thumbnails; add, duplicate, and delete frames
 - Playback speed control from 2 to 24 FPS
 - Starter emoji characters and props
@@ -28,7 +29,7 @@ A public test URL has not yet been verified. The repository is private, and depl
 - Image imports are embedded in the project file; large image collections may make project files large.
 - Video export depends on browser recording/codec support and may fall back to WebM.
 - Ready-made starter objects are emoji, not yet editable rigged/vector characters.
-- Multi-layer animation, scene/storyboard management, audio/voice tracks, GIF export, and a signed native iOS app are not implemented yet.
+- Layer visibility and drawing are implemented; layer reordering, per-layer transforms, scene/storyboard management, audio/voice tracks, GIF export, and a signed native iOS app are not implemented yet.
 
 ## Roadmap
 1. Test drawing, timeline, project save/open, installation, and export in iPhone Safari.
