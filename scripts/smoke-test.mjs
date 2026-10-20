@@ -10,7 +10,7 @@ new Function(appScript);
 const requiredIds = [
   "canvas", "frames", "frameLabel", "countLabel", "projectName", "saveStatus", "layersList", "addLayerBtn",
   "helpBtn", "openBtn", "saveBtn", "playBtn", "duplicateBtn", "addFrameBtn",
-  "deleteFrameBtn", "undoBtn", "clearBtn", "exportPngBtn", "exportVideoBtn",
+  "deleteFrameBtn", "undoBtn", "clearBtn", "exportPngBtn", "exportVideoBtn", "addHeroBtn",
   "importImageBtn", "imageInput", "fileInput", "fpsRange", "fpsValue",
   "onionToggle", "bgSelect", "sizeRange", "sizeValue", "colors", "colorName",
   "modal", "modalTitle", "modalText", "modalOk"
@@ -25,4 +25,6 @@ assert.ok(html.includes("serviceWorker.register('./sw.js')"), "Service worker mu
 assert.ok(appScript.includes("globalCompositeOperation='destination-out'"), "Eraser must be transparent");
 assert.ok(appScript.includes("exportCanvas.captureStream(fps)"), "Video export must use the clean export canvas");
 assert.ok(appScript.includes("kind:'image'"), "Image import must create image assets");
+assert.ok(appScript.includes("kind:'character'"), "The built-in character must be rendered");
+assert.ok(appScript.includes("function renderLayers()"), "Layer controls must render");
 console.log("Animation Studio smoke tests passed.");
