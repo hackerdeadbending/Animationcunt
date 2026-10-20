@@ -10,6 +10,7 @@ Animation Studio is a touch-friendly 2D animation editor for beginners. The curr
 - Frame thumbnails; add, duplicate, and delete frames
 - Playback speed control from 2 to 24 FPS
 - Starter emoji characters and props plus a simple built-in cartoon character
+- Drag-to-move for imported images and drawing objects
 - Import PNG/JPEG/WebP images (up to 2 MB per image)
 - Local browser autosave and portable `.animation.json` save/open
 - Clean PNG export of the current frame
