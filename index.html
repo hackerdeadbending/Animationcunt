@@ -28,7 +28,8 @@ let color=palette[0][0], tool='pen',size=7, bg='#ffffff', current=0, playing=fal
 let layers=[{id:'layer-1',name:'Слой 1',visible:true}],currentLayer='layer-1',layerSeq=1;
 const imageCache=new Map();
 function snapshot(){return JSON.parse(JSON.stringify(frames[current]));}
-function layerVisible(id){const layer=layers.find(x=>x.id===(id||'layer-1'));return !layer||layer.visible!==false;}\nfunction normalizeProject(d){if(Array.isArray(d.layers)&&d.layers.length){layers=d.layers;currentLayer=d.currentLayer||layers[0].id;layerSeq=layers.length;}else{layers=[{id:'layer-1',name:'Слой 1',visible:true}];currentLayer='layer-1';layerSeq=1;}if(!layers.some(x=>x.id===currentLayer))currentLayer=layers[0].id;(d.frames||[]).forEach(f=>(f.strokes||[]).forEach(s=>{if(!s.layerId)s.layerId='layer-1';}));}
+function layerVisible(id){const layer=layers.find(x=>x.id===(id||'layer-1'));return !layer||layer.visible!==false;}
+function normalizeProject(d){if(Array.isArray(d.layers)&&d.layers.length){layers=d.layers;currentLayer=d.currentLayer||layers[0].id;layerSeq=layers.length;}else{layers=[{id:'layer-1',name:'Слой 1',visible:true}];currentLayer='layer-1';layerSeq=1;}if(!layers.some(x=>x.id===currentLayer))currentLayer=layers[0].id;(d.frames||[]).forEach(f=>(f.strokes||[]).forEach(s=>{if(!s.layerId)s.layerId='layer-1';}));}
 function saveHistory(){history.push(snapshot());if(history.length>40)history.shift();}
 function scheduleSave(){ $('saveStatus').textContent='● Сохранение…'; clearTimeout(scheduleSave.t);scheduleSave.t=setTimeout(()=>{try{localStorage.setItem('animationcunt-project',JSON.stringify({name:$('projectName').value,frames,current,layers,currentLayer}));$('saveStatus').textContent='● Сохранено';}catch(e){$('saveStatus').textContent='● Только в этой сессии';}},400);}
 function drawStroke(c,s,alpha){c.save();c.globalAlpha=alpha??1;c.lineCap='round';c.lineJoin='round';c.strokeStyle=s.color||color;c.fillStyle=s.color||color;c.lineWidth=s.size||size;
