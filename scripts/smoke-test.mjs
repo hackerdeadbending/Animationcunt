@@ -8,7 +8,7 @@ const appScript = scripts.at(-1)[1];
 new Function(appScript);
 
 const requiredIds = [
-  "canvas", "frames", "frameLabel", "countLabel", "projectName", "saveStatus",
+  "canvas", "frames", "frameLabel", "countLabel", "projectName", "saveStatus", "layersList", "addLayerBtn",
   "helpBtn", "openBtn", "saveBtn", "playBtn", "duplicateBtn", "addFrameBtn",
   "deleteFrameBtn", "undoBtn", "clearBtn", "exportPngBtn", "exportVideoBtn",
   "importImageBtn", "imageInput", "fileInput", "fpsRange", "fpsValue",
