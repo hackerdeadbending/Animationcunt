@@ -27,4 +27,5 @@ assert.ok(appScript.includes("exportCanvas.captureStream(fps)"), "Video export m
 assert.ok(appScript.includes("kind:'image'"), "Image import must create image assets");
 assert.ok(appScript.includes("kind:'character'"), "The built-in character must be rendered");
 assert.ok(appScript.includes("function renderLayers()"), "Layer controls must render");
+assert.ok(html.includes('data-tool="move"'), "Object move tool must be available");
 console.log("Animation Studio smoke tests passed.");
