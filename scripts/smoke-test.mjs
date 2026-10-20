@@ -16,10 +16,10 @@ const requiredIds = [
   "modal", "modalTitle", "modalText", "modalOk"
 ];
 for (const id of requiredIds) {
-  assert.ok(html.includes('id="' + id + '"'), \`Missing UI element: \${id}\`);
+  assert.ok(html.includes('id="' + id + '"'), 'Missing UI element: ' + id);
 }
 for (const file of ["manifest.webmanifest", "icon.svg", "sw.js"]) {
-  assert.ok(existsSync(new URL("../" + file, import.meta.url)), \`Missing app asset: \${file}\`);
+  assert.ok(existsSync(new URL("../" + file, import.meta.url)), 'Missing app asset: ' + file);
 }
 assert.ok(html.includes("serviceWorker.register('./sw.js')"), "Service worker must be registered");
 assert.ok(appScript.includes("globalCompositeOperation='destination-out'"), "Eraser must be transparent");
